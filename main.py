@@ -4,9 +4,13 @@ import hashlib
 import os
 from dataclasses import dataclass
 import pendulum
+import dotenv
+from flask.cli import load_dotenv
 
 # Array to hold webhook dataclass
 webhooks = []
+
+load_dotenv()
 
 # Webhook dataclass
 @dataclass
@@ -34,7 +38,7 @@ def webhook():
   if request.method == "POST":
     is_genuine = verify_signature(
         message=request.data,
-        key=os.environ["WEBHOOK_SECRET"].encode("utf8"),
+        key=os.getenv("WEBHOOK_SECRET").encode("utf8"),
         signature=request.headers.get("X-Nylas-Signature"),
     )
 
