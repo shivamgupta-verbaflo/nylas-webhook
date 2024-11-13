@@ -5,10 +5,14 @@ import os
 from dataclasses import dataclass
 import pendulum
 import dotenv
+import logging
 from flask.cli import load_dotenv
 
 # Array to hold webhook dataclass
 webhooks = []
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -45,7 +49,7 @@ def webhook():
     if not is_genuine:
       return "Signature verification failed!", 401
     data = request.get_json()
-
+    logger.info(f"Received webhook request: {data}")
     hook = Webhook(
         data["data"]["object"]["id"],
         pendulum.from_timestamp(
